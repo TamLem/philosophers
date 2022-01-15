@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 16:33:28 by tlemma            #+#    #+#             */
-/*   Updated: 2022/01/11 18:00:50 by tlemma           ###   ########.fr       */
+/*   Updated: 2022/01/15 18:04:16 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ typedef struct s_philo
     int time_to_die;
     int time_to_eat;
     int time_to_sleep;
+    int *num_meals;
+    int *last_meal;
+    int started;
     int number_of_times_eat_philosopher_must_eat;
     /* data */
 }       t_philo;
