@@ -18,7 +18,8 @@ int init_params(t_philos *philos, int argc, char *argv[])
 	int num_of_meals;
 
 	i = 0;
-    if (argc < 5)
+    num_of_meals = -1;
+    if (argc < 5 || argc > 6)
         return (0);
 	if ((philos->num_of_philos = ft_atoi(argv[1])) == 0)
 		return (0);	
@@ -28,7 +29,7 @@ int init_params(t_philos *philos, int argc, char *argv[])
 		return (0);
 	if ((philos->time_to_sleep = ft_atoi(argv[4])) == 0)
 		return (0);
-	if ((num_of_meals = ft_atoi(argv[5])) == 0)
+	if (argc == 6 && (num_of_meals = ft_atoi(argv[5])) == 0)
 		return (0);
 	if ((philos->num_meals = malloc(philos->num_of_philos * sizeof(int))) == NULL)
 		return (0);
@@ -44,95 +45,12 @@ int init_params(t_philos *philos, int argc, char *argv[])
 	return (1);
 }
 
-int    get_time_ms(t_philos *philos)
-{
-    int    time_ms;
-    
-    struct timeval  thread_time;
-    gettimeofday(&thread_time, NULL);
-    time_ms = ((thread_time.tv_usec - philos->prog_time.tv_usec) / 1000 ) 
-        + ((thread_time.tv_sec - philos->prog_time.tv_sec) * 1000);
-    return (time_ms);
-}
-
-int    get_time_usec(t_philos *philos)
-{
-    int    time_usec;
-    
-    struct timeval  thread_time;
-    gettimeofday(&thread_time, NULL);
-    time_usec = (thread_time.tv_usec - philos->prog_time.tv_usec) 
-        + ((thread_time.tv_sec - philos->prog_time.tv_sec) * 1000000);
-    return (time_usec);
-}
-
-void ft_usleep(int total_sleep_ms, t_philos *philos)
-{
-    int start = get_time_usec(philos);
-    total_sleep_ms *= 1000;
-    // printf("start %d sleep %d\n", start, total_sleep_ms);
-    while (start + total_sleep_ms >= get_time_usec(philos))
-        usleep(100);
-}
-
-void print_time(t_philos *philos)
-{
-    printf ("%d ms\n", get_time_ms(philos));
-}
-
-int	philo_eat(int philo_id, t_philos *philos)
-{
-    pthread_mutex_lock(&philos->mutex[philo_id]);
-    // printf("%3dms %d has taken a fork %d\n", get_time_ms(), philo_id, philo_id);
-    printf("%3dms %d has taken a fork %d\n", get_time_ms(philos), philo_id, philo_id - 1);
-    printf("%3dms %d is  eating\n", get_time_ms(philos), philo_id);
-    philos->last_meal[philo_id - 1] = get_time_ms(philos);
-    ft_usleep(philos->time_to_eat, philos);
-    pthread_mutex_unlock(&philos->mutex[philo_id - 1]);
-    pthread_mutex_unlock(&philos->mutex[philo_id]);
-    return (1);
-}
-
-
 void    *say_hello(void *prog_time)
 {
     struct timeval  thread_time;
     gettimeofday(&thread_time, NULL);
-    printf("hello after %d usec\n", thread_time.tv_usec - ((struct timeval *)prog_time)->tv_usec);
+    printf("hello after %ld usec\n", thread_time.tv_usec - ((struct timeval *)prog_time)->tv_usec);
     return (NULL);
-}
-
-void    routine(t_philos *philos)
-{
-    int	philo_id;
-
-	philo_id = philos->started++ + 1;
-    if (philo_id % 2 != 0)
-        usleep(100);
-    philo_eat(philo_id, philos);
-    printf("%3dms %d is  sleeping\n", get_time_ms(philos), philo_id);
-    ft_usleep(philos->time_to_sleep, philos);
-    printf("%3dms %d is  thinking\n", get_time_ms(philos), philo_id);
-    pthread_exit(NULL);
-}
-
-int	death(t_philos *philos)
-{
-	int	i;
-
-	i = 1;
-    while (1)
-    {
-        ft_usleep(105, philos);
-		if (get_time_ms(philos) - philos->last_meal[i] > philos->time_to_die)
-		{
-			printf("%3dms %d has  died\n", get_time_ms(philos), i + 1);
-			exit (1);
-		}
-        if (i == philos->num_of_philos)
-            i = 0;
-		i++;
-    }
 }
 
 int main(int argc, char *argv[])
@@ -159,10 +77,10 @@ int main(int argc, char *argv[])
         i++;
     }
 	death_t = malloc(sizeof(pthread_t));
-	pthread_create(death_t, NULL, (void *)death, (void *)&philos);
+	pthread_create(death_t, NULL, (void *)death_routine, (void *)&philos);
 
     while (i > 0)
-        pthread_join(threads[i--], NULL);
+        pthread_join(threads[--i], NULL);
 
 	pthread_join(*death_t, NULL);
     i = 0;

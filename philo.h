@@ -31,10 +31,17 @@ typedef struct s_philos
     int             *last_meal;
     int             started;
 	pthread_mutex_t *mutex;
-    _STRUCT_TIMEVAL prog_time;
+    struct timeval prog_time;
     
 }       t_philos;
 
 long	ft_atoi(const char *str);
+void    routine(t_philos *philos);
+int     get_time_ms(t_philos *philos);
+int     get_time_usec(t_philos *philos);
+void    ft_usleep(int total_sleep_ms, t_philos *philos);
+void    print_time(t_philos *philos);
+int     death_routine(t_philos *philos);
+
 
 #endif
