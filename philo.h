@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 16:33:28 by tlemma            #+#    #+#             */
-/*   Updated: 2022/01/15 19:03:14 by tlemma           ###   ########.fr       */
+/*   Updated: 2022/01/18 00:29:31 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_philos
     int             time_to_eat;
     int             time_to_sleep;
     int             *num_meals;
+    int             tot_num_meals;
     int             *last_meal;
     int             started;
 	pthread_mutex_t *mutex;
@@ -36,7 +37,7 @@ typedef struct s_philos
 }       t_philos;
 
 long	ft_atoi(const char *str);
-void    routine(t_philos *philos);
+int    routine(t_philos *philos);
 int     get_time_ms(t_philos *philos);
 int     get_time_usec(t_philos *philos);
 void    ft_usleep(int total_sleep_ms, t_philos *philos);

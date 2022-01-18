@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 12:30:10 by tlemma            #+#    #+#             */
-/*   Updated: 2022/01/15 19:40:33 by tlemma           ###   ########.fr       */
+/*   Updated: 2022/01/18 00:30:47 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,16 @@ int init_params(t_philos *philos, int argc, char *argv[])
 		philos->last_meal[i] = 0;
 		i++;
 	}
+	philos->tot_num_meals = philos->num_of_philos * num_of_meals;
 	philos->started = 0;
 	return (1);
-}
-
-void    *say_hello(void *prog_time)
-{
-    struct timeval  thread_time;
-    gettimeofday(&thread_time, NULL);
-    printf("hello after %ld usec\n", thread_time.tv_usec - ((struct timeval *)prog_time)->tv_usec);
-    return (NULL);
 }
 
 int main(int argc, char *argv[])
 {
     int             i;
     pthread_t       *threads;
-	pthread_t		*death_t;
+	pthread_t		death_t;
 	t_philos		philos;
 
     i = 0;
@@ -76,14 +69,13 @@ int main(int argc, char *argv[])
 		pthread_create(&threads[i], NULL, (void *)routine, (void *)&philos);
         i++;
     }
-	death_t = malloc(sizeof(pthread_t));
-	pthread_create(death_t, NULL, (void *)death_routine, (void *)&philos);
-
-    while (i > 0)
-        pthread_join(threads[--i], NULL);
-
-	pthread_join(*death_t, NULL);
+	pthread_create(&death_t, NULL, (void *)death_routine, (void *)&philos);
+	i = philos.num_of_philos;
+	pthread_join(death_t, NULL);
+	while (i > 0)
+		pthread_detach(threads[--i]);
     i = 0;
     while (i < philos.num_of_philos)
         pthread_mutex_destroy(&philos.mutex[i++]);
+	return (0);
 }

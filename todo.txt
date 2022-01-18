@@ -1,2 +1,3 @@
 - fix code for even number of philos
 - fix code for num_of_eats
+- protect num_of_eats
