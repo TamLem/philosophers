@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/02 17:15:24 by tlemma            #+#    #+#             */
-/*   Updated: 2022/01/15 19:09:15 by tlemma           ###   ########.fr       */
+/*   Updated: 2022/01/18 16:22:35 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ long	ft_atoi(const char *str)
 	num = 0;
 	sign = -1;
 	if (!isvalidstr(str))
-		return (0);
+		return (-1);
 	while (str[i] != '\0')
 	{
 		if (!ft_isdigit(str[i]) && num)
