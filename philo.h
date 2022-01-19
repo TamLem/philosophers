@@ -39,6 +39,8 @@ typedef struct s_philos
 	int				started;
 	int				print_lock;
 	int				shared_lock;
+	int				death_lock;
+	int				philo_died;
 	pthread_mutex_t	*mutexs;
 	struct timeval	prog_time;
 }				t_philos;

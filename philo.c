@@ -43,8 +43,9 @@ int	init_params(t_philos *philos, int argc, char *argv[])
 	}
 	philos->tot_num_meals = philos->num_of_philos * num_of_meals;
 	philos->started = 0;
+	philos->philo_died = 0;
 	philos->print_lock = philos->num_of_philos;
-	philos->shared_lock = philos->print_lock + 1;
+	philos->shared_lock = philos->num_of_philos + 1;
 	return (1);
 }
 
@@ -76,8 +77,8 @@ int	main(int argc, char *argv[])
 		i++;
 	}
 	pthread_create(&death_t, NULL, (void *)death_routine, (void *)&philos);
-	i = philos.num_of_philos;
 	pthread_join(death_t, NULL);
+	i = philos.num_of_philos;
 	while (i > 0)
 		pthread_detach(threads[--i]);
 	i = 0;

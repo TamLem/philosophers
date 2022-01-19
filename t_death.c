@@ -17,20 +17,22 @@ int	death_routine(t_philos *philos)
 	int	i;
 
 	i = 1;
-	// usleep(100);
+	usleep(100);
 	while (1)
 	{
-		lock(shift(i), philos);
+		lock(philos->shared_lock, philos);
 		if (philos->tot_num_meals == 0)
-			return (1);
+			break ;
 		// printf("time %d last_meal %d, time_to_die%d\n", get_time_ms(philos), philos->last_meal[shift(i)], philos->time_to_die);
 		if (get_time_ms(philos) - philos->last_meal[shift(i)]
-			> philos->time_to_die && philos->num_meals[shift(i)] > 0)
+			> philos->time_to_die && philos->num_meals[shift(i)] != 0)
 		{
-			printf("%3dms %d has  died, meals left %d\n", get_time_ms(philos), i, philos->num_meals[shift(i)]);
-			return (1);
+			philos->philo_died = 1;
+			printf("%3dms %d has  died\n", get_time_ms(philos), i);
+			break ;
 		}
-		unlock(shift(i), philos);
+		unlock(philos->shared_lock, philos);
+		usleep(100);
 		i = (i % philos->num_of_philos) + 1;
 	}
 	return (0);
