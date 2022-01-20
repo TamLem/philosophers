@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/02 17:15:24 by tlemma            #+#    #+#             */
-/*   Updated: 2022/01/18 16:22:35 by tlemma           ###   ########.fr       */
+/*   Created: 2022/01/20 11:54:49 by tlemma            #+#    #+#             */
+/*   Updated: 2022/01/20 14:04:28 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 static int	ft_isdigit(int c)
 {
@@ -19,7 +19,7 @@ static int	ft_isdigit(int c)
 	return (0);
 }
 
-static int	isvalidstr(const char *s)
+int	isvalidstr(const char *s)
 {
 	int	i;
 	int	foundnum;
@@ -38,6 +38,29 @@ static int	isvalidstr(const char *s)
 		if ((s[i] == '+' || s[i] == '-') && !ft_isdigit(s[i + 1]))
 			return (0);
 		i++;
+	}
+	return (1);
+}
+
+int	check_input(char **nums)
+{
+	char	*num;
+
+	while (*nums)
+	{
+		num = *nums;
+		if (!isvalidstr(num))
+			return (0);
+		if (ft_atoi(num) > INT_MAX || ft_atoi(num) < INT_MIN
+			|| ft_atoi(num) <= 0)
+			return (0);
+		while (*num)
+		{
+			if (!ft_isdigit(*num) && *num != ' ' && *num != '-')
+				return (0);
+			num++;
+		}
+		nums++;
 	}
 	return (1);
 }

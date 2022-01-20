@@ -18,6 +18,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <limits.h>
 
 # define UNLIMITED -1
 # define FORK   0
@@ -48,7 +49,6 @@ typedef struct s_philos
 long	ft_atoi(const char *str);
 int		life_routine(t_philos *philos);
 int		get_time_ms(t_philos *philos);
-int		get_time_usec(t_philos *philos);
 void	ft_usleep(int total_sleep_ms, t_philos *philos);
 void	print_time(t_philos *philos);
 int		death_routine(t_philos *philos);
@@ -57,5 +57,8 @@ int		print_status(int status, int philo_id, t_philos *philos);
 void	print_params(t_philos *philos);
 int		lock(int to_lock, t_philos *philos);
 int		unlock(int to_lock, t_philos *philos);
+int		isvalidstr(const char *s);
+int		check_input(char **nums);
+int		check_death(t_philos *philos);
 
 #endif
